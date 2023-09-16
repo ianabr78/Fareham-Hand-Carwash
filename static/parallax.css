@@ -1,0 +1,35 @@
+.parallax{
+    background-image: url('/static/parallax_banner.jpg');
+    margin: 0;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#logo{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+    height: 1%;
+}
+
+/* Attributes that are specific to desktop */
+@media (hover: hover){
+    .parallax {
+        background-position: top;
+        padding-top: 1%;
+        box-shadow: inset 0 0 20px #000000;
+    }
+}
+
+/* Atributes that are specific to mobile */
+@media (hover: none), (hover:on-demand) {
+    .parallax{
+        height: 100%;
+        width: 100%;
+        background-position: top;
+        padding-top: 25%;
+        padding-bottom: 25%;
+    }
+}

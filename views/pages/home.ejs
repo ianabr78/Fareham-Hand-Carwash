@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <%- include('../partials/head'); %>
+        <link rel = "stylesheet" href="/static/parallax.css">
+        <link rel = "stylesheet" href="/static/gallery.css">
+    </head>
+
+    <body>
+        <!-- Top Nav Bar -->
+        <%- include('../partials/topnav'); %>
+
+        <!-- Parallax -->
+        <!-- Photo for parallax is currently not purchased but will be purchased if design is agreed -->
+        <div class = "parallax">
+            <img id = "logo" src="/static/Logo.webp">
+
+            <div class = "main-body">
+                <div class = "content">
+                    <div class = "about-us">
+                        <h2>About Us</h2>
+                        <p>Since 2008 Fareham Hand Carwash has provided the local community and local business with quality car cleaning services</p>
+                    </div>
+                    <div class = "showcase">
+                        <h2>Showcase</h2>
+                        <div class="gallery">
+                            <img id = "porche" src="/static/porsche.png" alt="a Porsche car after it has been cleaned">
+                            <img id = "fordbefore" src="/static/fordbefore.png" alt="a waterfall and many rocks">
+                            <img id = "fordafer" src="/static/fordafter.png" alt="a house on a mountain">
+                            <img id = "merc"src="/static/merc.png" alt="sime pink flowers">
+                            <!-- flex break ?-->
+                            <img id = "mclaren" src = "/static/mclaren.png" alt="big rocks with some trees">
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

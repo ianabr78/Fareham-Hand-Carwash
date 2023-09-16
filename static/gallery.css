@@ -1,0 +1,36 @@
+.gallery{
+    margin: auto;
+    display: grid;
+    gap: 0.5%;
+    width: 66%;
+    grid-template-columns: repeat(4, auto);
+}
+
+.gallery > img{
+    width: 100%;
+    aspect-ratio: 2;
+}
+
+#porche{
+    grid-column-start: 1;
+    grid-column-end: span 4;
+}
+
+#fordbefore{
+    grid-row-start: 2;
+    grid-column-start: 1;
+    grid-column-end: span 1;    
+}
+
+#fordafter{
+    grid-row-start: 2;
+    grid-column-start: 3;
+    grid-column-end: span 1;
+}
+
+#merc{
+    grid-row-start: 3;
+}
+#mclaren{
+    grid-row-start: 3;    
+}
