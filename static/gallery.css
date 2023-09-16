@@ -1,36 +1,55 @@
-.gallery{
-    margin: auto;
-    display: grid;
-    gap: 0.5%;
-    width: 66%;
-    grid-template-columns: repeat(4, auto);
+@media(hover: hover){
+    .gallery {
+        --s: 300px; /* control the size */
+        --g: 10px;  /* control the gap */
+        --f: 1.5;   /* control the scale factor */
+        
+        margin: auto;
+        display: grid;
+        gap: var(--g);
+        width: calc(3*var(--s) + 2*var(--g));
+        max-width: 77%;
+        aspect-ratio: 1;
+        grid-template-columns: repeat(3,auto);
+    }
+    
+    .gallery > img {
+        width: 0;
+        height: 0;
+        min-height: 100%;
+        min-width: 100%;
+        object-fit: cover;
+        cursor: pointer;
+        transition: .35s linear;
+    }
+    
+    .gallery img:hover{
+        width:  calc(var(--s)*var(--f));
+        height: calc(var(--s)*var(--f));
+    }
 }
 
-.gallery > img{
-    width: 100%;
-    aspect-ratio: 2;
-}
-
-#porche{
-    grid-column-start: 1;
-    grid-column-end: span 4;
-}
-
-#fordbefore{
-    grid-row-start: 2;
-    grid-column-start: 1;
-    grid-column-end: span 1;    
-}
-
-#fordafter{
-    grid-row-start: 2;
-    grid-column-start: 3;
-    grid-column-end: span 1;
-}
-
-#merc{
-    grid-row-start: 3;
-}
-#mclaren{
-    grid-row-start: 3;    
+@media(hover: none), (hover: on-demand){
+    .gallery {
+        --s: 25%; /* control the size */
+        --g: 1;  /* control the gap */
+        --f: 1.5;   /* control the scale factor */
+        
+        margin: auto;
+        display: grid;
+        gap: var(--g);
+        width: calc(3*var(--s) + 2*var(--g));
+        aspect-ratio: 1;
+        grid-template-columns: repeat(3,auto);
+    }
+    
+    .gallery > img {
+        width: 0;
+        height: 0;
+        min-height: 100%;
+        min-width: 100%;
+        object-fit: cover;
+        cursor: pointer;
+        transition: .35s linear;
+    }
 }

@@ -23,7 +23,8 @@ class Router{
             res.render('pages/home');
         });
 
-        this.sendDir('./static/')
+        this.sendDir('./static/');
+        this.sendDir('./static/images');
     }
 
     /** Send all files in directory
