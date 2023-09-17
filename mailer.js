@@ -9,6 +9,7 @@
 const nodemailer = require('nodemailer');
 
 class Mailer{
+    // Class to send emails
     constructor(){
         require('dotenv').config();
 
@@ -23,12 +24,17 @@ class Mailer{
             secure: true,
         });
 
+        // Sender and reviever will stay the same so reusable object works again
         this.mailData = {
             from: process.env.EMAIL,
             to: process.env.RECIEVER,   
         };
     }
 
+    /** Send email to recipient
+     * 
+     * @param {Object} mail Contains the subject, plaintext & html of email, which is set from the POST
+     */
     sendMail(mail){
         this.mailData.subject = mail.subject
         this.mailData.text = mail.text

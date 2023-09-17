@@ -1,7 +1,7 @@
 /** Name:   Carwash-Site-Server.router.js
  *  Desc:   Configures all routes for the server
  *  Author: Jimy Houlbrook
- *  Date:   26/09/2023
+ *  Date:   16/09/2023
  */
 
 const path = require('path');
@@ -9,10 +9,7 @@ const fs = require('fs');
 const Mailer = require('./mailer');
 
 class Router{
-    /** Create router
-     * 
-     * @param app The express application
-     */
+    // Router for the express application
     constructor(app){
         this.app = app;
         this.route;
@@ -21,6 +18,7 @@ class Router{
 
     // Routes, including Get and Post
     route(){
+        // GET requests
         this.app.get('/', (req, res) => {
             res.render('pages/home');
         });
@@ -36,6 +34,7 @@ class Router{
         this.sendDir('./static/');
         this.sendDir('./static/images');
 
+        // POST requests
         this.app.post('/submitBooking', (req, res) => {
             const data = req.body
             const mail = {
@@ -46,7 +45,7 @@ class Router{
             this.mailer.sendMail(mail);
         })
 
-        // Return a 404 response page if page not found
+        // Show a page if url not found
         this.app.get('*', (req, res) => {
             res.render('pages/notfound');
         });
