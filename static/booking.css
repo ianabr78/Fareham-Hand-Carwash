@@ -1,0 +1,25 @@
+.booking{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.entry{
+    flex: 50%;
+    padding-bottom: 2%;
+}
+
+#bookbutton{
+    width: 15%;
+    border-radius: 25px;
+}
+
+#bookbutton:hover{
+    background-color: #A9A9A9;
+}
+
+.break{
+    flex-basis: 100%;
+    height: 0;
+}

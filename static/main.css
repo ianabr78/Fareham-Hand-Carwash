@@ -8,6 +8,7 @@ body{
 .main-body{
     width: 100%;
     color: white;
+    padding-bottom: 5%;
 }
 
 .content{
@@ -41,4 +42,20 @@ body{
 
 .flex-container{
     padding: 1%;
+}
+
+.contact{
+    padding-top: 2%;
+    display: flex;
+    justify-content: center;
+}
+
+#phone{
+    padding-left: 3%;
+    display: flex;
+}
+
+#phone > svg {
+    padding-right: 1%;
+    margin-top: 2%;
 }

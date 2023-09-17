@@ -6,6 +6,7 @@
 
 const path = require('path');
 const fs = require('fs');
+const Mailer = require('./mailer');
 
 class Router{
     /** Create router
@@ -15,6 +16,7 @@ class Router{
     constructor(app){
         this.app = app;
         this.route;
+        this.mailer = new Mailer()
     }
 
     // Routes, including Get and Post
@@ -23,8 +25,31 @@ class Router{
             res.render('pages/home');
         });
 
+        this.app.get('/home', (req, res) => {
+            res.render('pages/home');
+        });
+
+        this.app.get('/booking', (req, res) => {
+            res.render('pages/booking');
+        });
+
         this.sendDir('./static/');
         this.sendDir('./static/images');
+
+        this.app.post('/submitBooking', (req, res) => {
+            const data = req.body
+            const mail = {
+                subject: `Booking ${data.time}, ${data.data}`,
+                text: `Booking at ${data.time}, ${data.data} for ${data.name}, ${data.car}, ${data.size}`,
+                html: `<p>Booking at ${data.time}, ${data.data} for ${data.name}, ${data.car}, ${data.size}</p>`
+            }
+            this.mailer.sendMail(mail);
+        })
+
+        // Return a 404 response page if page not found
+        this.app.get('*', (req, res) => {
+            res.render('pages/notfound');
+        });
     }
 
     /** Send all files in directory

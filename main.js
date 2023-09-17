@@ -17,6 +17,8 @@ class Server{
         this.app = express();
         this.hostName = process.env.HOST_NAME;
         this.port = process.env.PORT;
+        
+        this.app.use(express.json());
 
         // Set view engine to EJS
         this.app.set('view engine', 'ejs');
