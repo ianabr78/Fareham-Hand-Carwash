@@ -21,7 +21,7 @@ class Server{
         this.port = process.env.PORT;
         
         // Middleware for favicon & Parsing json in POST requests
-        this.app.use(favicon(path.join(__dirname, 'favicon.ico')));
+        this.app.use(favicon(path.join(__dirname, '/static/favicon.ico')));
         this.app.use(express.json());
 
         // Set view engine to EJS
