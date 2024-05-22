@@ -17,6 +17,8 @@ class Router{
     }
 
     // Routes, including Get and Post
+    // Make sure you add any new pages here!
+
     route(){
         // GET requests
         this.app.get('/', (req, res) => {
@@ -29,6 +31,10 @@ class Router{
 
         this.app.get('/booking', (req, res) => {
             res.render('pages/booking');
+        });
+
+        this.app.get('/bookings', (req, res) => {
+            res.render('pages/bookings');
         });
 
         this.sendDir('./static/');
