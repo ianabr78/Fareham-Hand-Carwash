@@ -1,18 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Details</title>
+    <%- include('../partials/head'); %>
+    <link rel="stylesheet" href="/static/parallax.css">
+    <link rel="stylesheet" href="/static/gallery.css">
+    <style>
+        .highlight {
+            background-color: yellow;
+            /* Or any other highlight style */
+        }
+    </style>
+
+    <script src="/static/utils.js"></script>
+
+
 </head>
+
 <body>
-    <h1>Booking Details</h1>
-    <% if (booking) { %>
-        <p><strong>Name:</strong> <%= booking.name %></p>
-        <p><strong>Date:</strong> <%= booking.date %></p>
-        <p><strong>Service:</strong> <%= booking.service %></p>
-    <% } else { %>
-        <p>Booking not found.</p>
-    <% } %>
+    <!-- Top Nav Bar -->
+    <%- include('../partials/topnav'); %>
+
+    <!-- Parallax -->
+    <!-- Photo for parallax is currently not purchased but will be purchased if design is agreed -->
+    <div class="parallax">
+        <img id="logo" src="/static/Logo.webp">
+
+        <div class="main-body">
+            <div>
+                <h1 id="sep_h1">Booking Details.</h1>
+
+                <div class="booking">
+
+                    <div class="entry">
+                        <p>Find a Booking:</p>
+                        <input type="text" placeholder="BookingID Here" id="findID">
+                        <button onclick="searchBooking()">Search</button>
+                    </div>
+
+                    <div id="bookingsContainer">
+                        result will show here
+                    </div>
+
+                </div>
+
+         
+
+                <% if (bookings && bookings.length> 0) { 
+                    bookings.forEach(booking=> { 
+                        // Get the booking ID as a string
+                        const bookingIdString = booking._id.toString();
+                        // Assuming the newBookingId is passed from the server-side logic
+                        const isNewBooking = bookingIdString === newBookingId;
+                        const bookingClass = isNewBooking ? 'highlight' : '';
+                %>
+                <div class="booking <%= bookingClass %>"
+                    id="<%= booking._id %>">
+                    <div class="bookings">
+                        <p><strong>ID:</strong>
+                            <%= booking._id %>
+                        </p>
+                        <p><strong>Name:</strong>
+                            <%= booking.name %>
+                        </p>
+                        <p><strong>Date:</strong>
+                            <%= booking.date %>
+                        </p>
+                        <p><strong>Vehicle:</strong>
+                            <%= booking.car %>
+                        </p>
+                    </div>
+                </div>
+                <% }); %>
+                <% } else { %>
+                <p>No bookings found.</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>

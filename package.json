@@ -1,15 +1,16 @@
 {
-  "name": "Fareham-Hand-Carwash",
+  "name": "fareham-hand-carwash",
   "version": "1.0.0",
-  "description": "",
+  "description": "Use Node Package Manager (npm) to install the required packages",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start --w": "nodemon main.js",
-    "start": "node main.js"
+    "start": "node main.js",
+    "dev": "nodemon main.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Ian Brown",
   "license": "ISC",
   "devDependencies": {
     "dotenv": "^16.3.1",
@@ -19,6 +20,16 @@
     "nodemon": "^3.0.1"
   },
   "dependencies": {
+    "mongo": "^0.1.0",
+    "mongoose": "^8.4.0",
     "serve-favicon": "^2.5.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ianabr78/Fareham-Hand-Carwash.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ianabr78/Fareham-Hand-Carwash/issues"
+  },
+  "homepage": "https://github.com/ianabr78/Fareham-Hand-Carwash#readme"
 }
