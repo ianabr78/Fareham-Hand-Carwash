@@ -73,6 +73,14 @@ git fetch origin
 force push:
 git push origin main --force
 
+
+pulling: check whats different / discard local changes / overwite local (force)
+
+git fetch  
+git reset --hard HEAD
+git checkout -f origin/main
+
+
 ********************************
  Mongo 
 

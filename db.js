@@ -47,6 +47,11 @@ class Database {
 
     async customQuery(criteria) {
         try {
+            //console.log ('ID being searched for in the db class is: ' + criteria);
+            // this is an object so will report to the console just as Oject : object - it needs to be a string representation as below
+
+            console.log('ID being searched for is: ' + JSON.stringify(criteria));
+
             const collection = this.db.collection('bookings');
             return await collection.find(criteria).toArray();
         } catch (err) {

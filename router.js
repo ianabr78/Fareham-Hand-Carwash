@@ -74,6 +74,7 @@ class Router {
                 // the line above does not work becasue db is not within the scope of this function its set up in its own class and can only be referred to that way there
 
                 const id = req.query.id; // Extract the id query parameter from the request object
+                console.log('id being searched for is:' + id);
 
                 const results = await this.db.customQuery({ _id: id }); // where _id matches the id from the bookings mongo collection
                 res.json(results);
