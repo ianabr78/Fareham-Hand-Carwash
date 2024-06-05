@@ -44,7 +44,8 @@
 
                 </div>
 
-         
+                <!-- Hidden div to store bookings data -->
+                <div id="bookingsData" style="display: none;"><%= JSON.stringify(bookings) %></div>
 
                 <% if (bookings && bookings.length> 0) { 
                     bookings.forEach(booking=> { 

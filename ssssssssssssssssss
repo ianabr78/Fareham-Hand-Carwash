@@ -1,0 +1,190 @@
+[1mdiff --git a/db.js b/db.js[m
+[1mindex 734c662..f9ebc59 100644[m
+[1m--- a/db.js[m
+[1m+++ b/db.js[m
+[36m@@ -1,17 +1,53 @@[m
+ const { MongoClient } = require("mongodb");[m
+ [m
+[31m-const uri = "mongodb+srv://fhamcwash:A3aikqyL94qbgyrV@fareham-hand-carwash.7wrs3jo.mongodb.net/?retryWrites=true&w=majority&appName=Fareham-Hand-Carwash";[m
+[31m-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });[m
+[32m+[m[32mclass Database {[m
+[32m+[m[32m    constructor() {[m
+[32m+[m[32m        this.uri = "mongodb+srv://fhamcwash2:zjEqxsEInK6ER200@fareham-hand-carwash.7wrs3jo.mongodb.net/?retryWrites=true&w=majority&appName=Fareham-Hand-Carwash";[m
+[32m+[m[32m        this.client = new MongoClient(this.uri, {[m
+[32m+[m[32m            tlsAllowInvalidCertificates: true // For testing purposes only[m
+[32m+[m[32m        });[m
+[32m+[m[41m        [m
+[32m+[m[32m        this.db = null;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    async connect() {[m
+[32m+[m[32m        try {[m
+[32m+[m[32m            await this.client.connect();[m
+[32m+[m[32m            this.db = this.client.db('fhcw'); //fhcw is the datsabase name, not the username (as defined in .env)[m
+[32m+[m[32m            console.log('Connected to MongoDB...');[m
+[32m+[m[32m        } catch (err) {[m
+[32m+[m[32m            console.error('Error connecting to MongoDB:', err);[m
+[32m+[m[32m            throw err;[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    async fetchBookingDetails() {[m
+[32m+[m[32m        try {[m
+[32m+[m[32m            // 'bookings' is the actual collection name[m
+[32m+[m[32m            const collection = this.db.collection('bookings');[m
+[32m+[m[32m            return await collection.find({}).toArray(); // Modify to match specific criteria if necessary[m
+[32m+[m[32m        } catch (err) {[m
+[32m+[m[32m            console.error('Error fetching booking details:', err);[m
+[32m+[m[32m            throw err;[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    async addBookingDetails(data) {[m
+[32m+[m[32m        try {[m
+[32m+[m[32m            const collection = this.db.collection('bookings');[m
+[32m+[m[32m            const result = await collection.insertOne(data);[m
+[32m+[m[32m            // if we dont use await collection.insertOne(data) then whole object can be returned[m
+[32m+[m[32m            return result; // Return the result of insertOne[m
+[32m+[m[41m           [m
+[32m+[m[32m        } catch (err) {[m
+[32m+[m[32m            console.error('Error inserting booking details:', err);[m
+[32m+[m[32m            throw err;[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+ [m
+[31m-async function connectDB() {[m
+[31m-    try {[m
+[31m-        await client.connect();[m
+[31m-        console.log('Connected to MongoDB...');[m
+[31m-        return client.db('fhcw');[m
+[31m-    } catch (err) {[m
+[31m-        console.error('Error connecting to MongoDB:', err);[m
+[31m-        throw err;[m
+[32m+[m[32m    async close() {[m
+[32m+[m[32m        await this.client.close();[m
+     }[m
+ }[m
+ [m
+[31m-module.exports = connectDB;[m
+\ No newline at end of file[m
+[32m+[m[32mmodule.exports = Database;[m
+[1mdiff --git a/main.js b/main.js[m
+[1mindex b4212a4..5022ccf 100644[m
+[1m--- a/main.js[m
+[1m+++ b/main.js[m
+[36m@@ -1,54 +1,33 @@[m
+[32m+[m[32mconst { MongoClient } = require('mongodb');[m
+ const express = require('express');[m
+ const favicon = require('serve-favicon');[m
+ const path = require('path');[m
+[31m-[m
+[32m+[m[32mconst Database = require('./db');  // make sure these match the class names used[m
+ const Router = require('./router');[m
+ [m
+[31m-const { MongoClient } = require('mongodb');[m
+[31m-[m
+[31m-[m
+ class Server {[m
+[31m-    // initialise the server[m
+     constructor() {[m
+[31m-[m
+[31m-        //get local vars[m
+         require('dotenv').config();[m
+ [m
+         this.app = express();[m
+[31m-        this.hostName = process.env.HOST_NAME;[m
+[31m-        this.port = process.env.PORT;[m
+[32m+[m[32m        this.hostName = process.env.HOST_NAME || 'localhost';[m
+[32m+[m[32m        this.port = process.env.PORT || 3000;[m
+ [m
+[31m-        this.app.use(favicon(path.join(__dirname, '/static/favicon.ico')));[m
+[32m+[m[32m        this.app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));[m
+         this.app.use(express.json());[m
+[31m-[m
+[31m-        // Set view engine to EJS[m
+         this.app.set('view engine', 'ejs');[m
+ [m
+[31m-        this.uri = process.env.MONGODB_URI;[m
+[31m-        this.client = new MongoClient(this.uri, { useNewUrlParser: true, useUnifiedTopology: true });[m
+[31m-[m
+[31m-        // Initialise router before calling runtime[m
+[31m-        this.router = new Router(this.app);[m
+[31m-        this.runtime();[m
+[31m-    }[m
+[31m-[m
+[31m-    // Server runtime[m
+[31m-    runtime(){[m
+[31m-        // Routes for server[m
+[31m-        this.router.route();[m
+[31m-        this.app.listen(this.port, () => {[m
+[31m-            console.log(`Connect too: ${this.hostName}:${this.port}`);[m
+[31m-        });[m
+[32m+[m[32m        this.db = new Database();[m
+[32m+[m[32m        this.init();[m
+     }[m
+ [m
+     async init() {[m
+[31m-        try { this.client.connect();[m
+[32m+[m[32m        try {[m
+[32m+[m[32m            await this.db.connect();[m
+             console.log('Connected to MongoDB...');[m
+[31m-            this.db = this.client.db('fhcw');[m
+ [m
+[31m-            this.router = new Router(this.app, this.db);[m
+[31m-            this.route[m
+[31m-            await.route();[m
+[32m+[m[32m            this.router = new Router(this.app, this.db); // Pass the db instance from the Database class[m
+[32m+[m[32m            this.router.route();[m
+ [m
+             this.app.listen(this.port, () => {[m
+                 console.log(`Connected to: ${this.hostName}:${this.port}`);[m
+[36m@@ -60,4 +39,4 @@[m [mclass Server {[m
+     }[m
+ }[m
+ [m
+[31m-new Server();[m
+\ No newline at end of file[m
+[32m+[m[32mnew Server();[m
+[1mdiff --git a/package-lock.json b/package-lock.json[m
+[1mindex e718525..c42c4b6 100644[m
+[1m--- a/package-lock.json[m
+[1m+++ b/package-lock.json[m
+[36m@@ -1,14 +1,16 @@[m
+ {[m
+[31m-  "name": "Fareham-Hand-Carwash",[m
+[32m+[m[32m  "name": "fareham-hand-carwash",[m
+   "version": "1.0.0",[m
+   "lockfileVersion": 2,[m
+   "requires": true,[m
+   "packages": {[m
+     "": {[m
+[31m-      "name": "Fareham-Hand-Carwash",[m
+[32m+[m[32m      "name": "fareham-hand-carwash",[m
+       "version": "1.0.0",[m
+       "license": "ISC",[m
+       "dependencies": {[m
+[32m+[m[32m        "mongo": "^0.1.0",[m
+[32m+[m[32m        "mongoose": "^8.4.0",[m
+         "serve-favicon": "^2.5.0"[m
+       },[m
+       "devDependencies": {[m
+[36m@@ -19,6 +21,27 @@[m
+         "nodemon": "^3.0.1"[m
+       }[m
+     },[m
+[32m+[m[32m    "node_modules/@mongodb-js/saslprep": {[m
+[32m+[m[32m      "version": "1.1.7",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/@mongodb-js/saslprep/-/saslprep-1.1.7.tgz",[m
+[32m+[m[32m      "integrity": "sha512-dCHW/oEX0KJ4NjDULBo3JiOaK5+6axtpBbS+ao2ZInoAL9/YRQLhXzSNAFz7hP4nzLkIqsfYAK/PDE3+XHny0Q==",[m
+[32m+[m[32m      "dependencies": {[m
+[32m+[m[32m        "sparse-bitfield": "^3.0.3"[m
+[32m+[m[32m      }[m
+[32m+[m[32m    },[m
+[32m+[m[32m    "node_modules/@types/webidl-conversions": {[m
+[32m+[m[32m      "version": "7.0.3",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/@types/webidl-conversions/-/webidl-conversions-7.0.3.tgz",[m
+[32m+[m[32m      "integrity": "sha512-CiJJvcRtIgzadHCYXw7dqEnMNRjhGZlYK05Mj9OyktqV8uVT8fD2BFOB7S1uwBE3Kj2Z+4UyPmFw/Ixgw/LAlA=="[m
+[32m+[m[32m    },[m
+[32m+[m[32m    "node_modules/@types/whatwg-url": {[m
+[32m+[m[32m      "version": "11.0.5",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/@types/whatwg-url/-/whatwg-url-11

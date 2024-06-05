@@ -45,9 +45,21 @@ class Database {
         }
     }
 
+    async customQuery(criteria) {
+        try {
+            const collection = this.db.collection('bookings');
+            return await collection.find(criteria).toArray();
+        } catch (err) {
+            console.error('Error executing custom query:', err);
+            throw err;
+        }
+    }
+
     async close() {
         await this.client.close();
     }
+
+    
 }
 
 module.exports = Database;

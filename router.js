@@ -39,6 +39,7 @@ class Router {
                 const bookingsData = await this.db.fetchBookingDetails(); // 
         
                 // Pass the fetched booking details and new booking ID to the page
+                //  req.query is a method for querying the url
                 const newBookingId = req.query.newBookingId || 'defaultBookingId'; // Get the new booking ID from query params, set default if not present
 
 
@@ -58,6 +59,28 @@ class Router {
         
         });
         
+
+
+        // for the find on the bookings.js page
+
+        this.app.get('/api/customquery', async (req, res) => {
+            // so here req and res are the html client side request and the server (db.js) reposne
+            // these just have to match the objects created below, the names could change
+            ///api/customquery is just a convention used (see utils.js call to this route)
+
+            try {
+                
+                //const results = await db.customQuery(req.query.criteria || {});
+                // the line above does not work becasue db is not within the scope of this function its set up in its own class and can only be referred to that way there
+
+                const id = req.query.id; // Extract the id query parameter from the request object
+
+                const results = await this.db.customQuery({ _id: id }); // where _id matches the id from the bookings mongo collection
+                res.json(results);
+            } catch (error) {
+                res.status(500).json({ error: 'Failed to execute custom query' });
+            }
+        });
 
 
         //
