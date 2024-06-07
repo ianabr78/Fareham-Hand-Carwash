@@ -30,22 +30,28 @@
             <div>
                 <h1 id="sep_h1">Booking Details.</h1>
 
-                <div class="booking">
 
-                    <div class="entry">
+                    <div class="bookings" id="search" style="background-color:white; color: black;">
+
                         <p>Find a Booking:</p>
                         <input type="text" placeholder="BookingID Here" id="findID">
                         <button onclick="searchBooking()">Search</button>
-                    </div>
 
-                    <div id="bookingsContainer">
+                        <div id="bookingsContainer">
                         result will show here
+                        </div>
+                        <a href="#" onclick="filterBookings('week'); return false;">
+                         <span>Filter This week</span>
+                        </a>
+                        <a href="#" onclick="filterBookings('today'); return false;">
+                         <span>Filter Today</span>
+                        </a>
+
                     </div>
 
-                </div>
 
-                <!-- Hidden div to store bookings data -->
-                <div id="bookingsData" style="display: none;"><%= JSON.stringify(bookings) %></div>
+
+               
 
                 <% if (bookings && bookings.length> 0) { 
                     bookings.forEach(booking=> { 

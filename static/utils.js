@@ -1,3 +1,11 @@
+function filterBookings(filter){
+
+
+    // Redirect to the /api/filterBookings endpoint
+    window.location.href = `/api/filterBookings?filter=${filter}`;
+
+}
+
 // **New Function** to search booking by ID and update the display
 function searchBooking() {
     const searchValue = document.getElementById('findID').value;
@@ -23,10 +31,15 @@ function searchBooking() {
 
             if (data && data.length > 0) {
                 data.forEach(booking => displayBooking(booking)); // **Updated to handle multiple bookings**
+
+               // Change the background color of the div
+                container.style.backgroundColor = 'green'; // Change 'blue' to any color you desire
+
+
             } else {
                 container.innerHTML = '<p>No booking found.</p>'; // **New Error Handling**
                 alert(searchValue + ' no booking found');
-
+                container.style.backgroundColor = 'red'; // Change 'blue' to any color you desire
             }
         })
         .catch(error => {

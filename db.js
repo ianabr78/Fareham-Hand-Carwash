@@ -1,4 +1,5 @@
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb"); // Import ObjectId along with MongoClient
+
 
 class Database {
     constructor() {
@@ -45,12 +46,58 @@ class Database {
         }
     }
 
+
+    async filterByDate(startDate, endDate) {
+    try {
+
+        const collection = this.db.collection('bookings');
+
+
+         // Log the query before executing
+        console.log('Filter by date query:', {
+            date: {
+                $gte: startDate, // Start from current date
+                $lte: endDate // End at date for 7 days from now
+            }
+        });
+
+        // execute
+        return await collection.find({
+            date: {
+                $gte: startDate, // Start from current date
+                $lte: endDate // End at specified date
+            }
+        }).toArray();
+
+        //return result; // redundant but would workits not fine becasue the error I gave you before lte is not defined
+
+
+    } catch (err) {
+        console.error('Error filtering bookings for this week:', err);
+        throw err;
+    }
+}
+
+    // working
     async customQuery(criteria) {
         try {
-            //console.log ('ID being searched for in the db class is: ' + criteria);
-            // this is an object so will report to the console just as Oject : object - it needs to be a string representation as below
 
-            console.log('ID being searched for is: ' + JSON.stringify(criteria));
+             // Convert string _id to ObjectId if present in criteria
+             // This line converts the _id field in the criteria object from a string to an ObjectId, 
+             // which is necessary for MongoDB to perform the query correctly.
+             // When querying by _id, MongoDB expects the _id field to be of type ObjectId.
+            if (criteria._id) {
+            // The _id field in the criteria object is transformed from a string to an ObjectId using new ObjectId(criteria._id).
+            criteria._id = new ObjectId(criteria._id); 
+            // The line criteria._id = new ObjectId(criteria._id) converts the _id field from a string to an ObjectId instance as expected by Mongo
+            // see the first line where ObjectId is imported to mongo
+            }
+
+            // console.log ('ID being searched for in the db class is: ' + criteria);
+            // this is an object so will report to the console just as Oject : object - it needs to be a string representation as below
+            
+            console.log('Criteria object:', criteria);
+            // console.log('ID being searched for is: ' + JSON.stringify(criteria));
 
             const collection = this.db.collection('bookings');
             return await collection.find(criteria).toArray();

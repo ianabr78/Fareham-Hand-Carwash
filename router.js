@@ -42,7 +42,6 @@ class Router {
                 //  req.query is a method for querying the url
                 const newBookingId = req.query.newBookingId || 'defaultBookingId'; // Get the new booking ID from query params, set default if not present
 
-
                 // Use the imported functions to process your data if needed
                 // cant use these client side functions here!
                //const processedBookings = displayBooking(bookingsData);
@@ -62,7 +61,6 @@ class Router {
 
 
         // for the find on the bookings.js page
-
         this.app.get('/api/customquery', async (req, res) => {
             // so here req and res are the html client side request and the server (db.js) reposne
             // these just have to match the objects created below, the names could change
@@ -76,13 +74,55 @@ class Router {
                 const id = req.query.id; // Extract the id query parameter from the request object
                 console.log('id being searched for is:' + id);
 
-                const results = await this.db.customQuery({ _id: id }); // where _id matches the id from the bookings mongo collection
+                //const results = await this.db.customQuery( { "_id": ObjectId(id) } ); // where _id matches the id from the bookings mongo collection
+                const results = await this.db.customQuery({ "_id": id }); // id is a string at this point
+
                 res.json(results);
             } catch (error) {
                 res.status(500).json({ error: 'Failed to execute custom query' });
             }
-        });
+        }); // end
 
+        
+        // ALL DATE FILTERS
+
+        this.app.get('/api/filterBookings', async (req, res) => {
+
+            const filter = req.query.filter; // Extract the id query parameter from the request object where query is a method qurying the URL
+
+            // setup the dates
+            const startDate = new Date();
+            const endDate = new Date(startDate);
+
+
+            endDate.setDate(startDate.getDate() + 1); // default
+
+            // setup start and end dates:
+            if (filter === "month") {
+                endDate.setDate(startDate.getDate() + 30);
+                console.log("filtering weekly..."); 
+                } // end this week bookings
+            
+            if (filter === "week") {
+                endDate.setDate(startDate.getDate() + 7);
+                console.log("filtering weekly..."); 
+                } // end this week bookings
+
+            if (filter === "today") {
+                console.log("filtering today..."); 
+                endDate.setDate(startDate.getDate() + 1);
+                } // end todays bookings
+              
+            // call the DB method and render:
+
+            try {            
+            const bookingsData = await this.db.filterByDate({ "startDate": startDate, "endDate" : endDate }); //               
+            res.render('pages/bookings', { bookings: bookingsData });
+            }       
+            
+            catch (error) { res.status(500).json({ error: 'Failed to filter todays bookings' }); }
+
+        }); //end route
 
         //
 
