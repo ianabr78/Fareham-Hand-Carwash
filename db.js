@@ -52,20 +52,26 @@ class Database {
 
         const collection = this.db.collection('bookings');
 
+        // the dated need conversion for use in mongoDB:
+       // startDate = startDate.toISOString();
+       // endDate = endDate.toISOString();
+
+
+        console.log('start: ' + startDate + ' end:' + endDate);
 
          // Log the query before executing
         console.log('Filter by date query:', {
             date: {
-                $gte: startDate, // Start from current date
-                $lte: endDate // End at date for 7 days from now
+                $gte: startDate,
+                $lte: endDate
             }
         });
 
         // execute
         return await collection.find({
             date: {
-                $gte: startDate, // Start from current date
-                $lte: endDate // End at specified date
+                $gte: startDate,
+                $lte: endDate
             }
         }).toArray();
 

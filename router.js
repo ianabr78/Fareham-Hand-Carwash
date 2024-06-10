@@ -91,32 +91,43 @@ class Router {
             const filter = req.query.filter; // Extract the id query parameter from the request object where query is a method qurying the URL
 
             // setup the dates
-            const startDate = new Date();
-            const endDate = new Date(startDate);
-
-
-            endDate.setDate(startDate.getDate() + 1); // default
+            const startDate = new Date(); // this will be today
+            const endDate = new Date(startDate); //ensures theres no time drift as based on clone of startDate
+            
 
             // setup start and end dates:
             if (filter === "month") {
-                endDate.setDate(startDate.getDate() + 30);
+                endDate.setDate(endDate.getDate() + 30);
                 console.log("filtering weekly..."); 
                 } // end this week bookings
             
             if (filter === "week") {
-                endDate.setDate(startDate.getDate() + 7);
+                endDate.setDate(endDate.getDate() + 7);
                 console.log("filtering weekly..."); 
                 } // end this week bookings
 
             if (filter === "today") {
                 console.log("filtering today..."); 
-                endDate.setDate(startDate.getDate() + 1);
+                endDate.setDate(endDate.getDate() + 1);
+
                 } // end todays bookings
-              
+
+  
             // call the DB method and render:
 
-            try {            
-            const bookingsData = await this.db.filterByDate({ "startDate": startDate, "endDate" : endDate }); //               
+            try {       
+
+            
+
+            // this didnt work:
+            //const bookingsData = await this.db.filterByDate({ startDate: startDate, endDate: endDate }); //
+            //The filterByDate function would need to be defined to accept a single parameter, typically named something like dateRange or params, and then access params.startDate and params.endDate within the function.
+                // filterByDate({ startDate: startDate, endDate: endDate }); 
+                // eg could be received by 
+                // async filterByDate(dateRange) {  const { startDate, endDate } = dateRange;
+                // ...
+
+            const bookingsData = await this.db.filterByDate(startDate, endDate);
             res.render('pages/bookings', { bookings: bookingsData });
             }       
             
