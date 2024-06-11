@@ -32,25 +32,16 @@ then: nvm install node (from main command prompt not terminal)
 ********************************
 ai, gpt
 
-please remember the following set of rules:
+please use the following codes in this session:
 
-
-I will use these codes:
 #0 remember this for later, the filename will be at the top, confirm you have remembered it only. Please refer to code by the page names provided.
 #1 yes or no answer
 #2 roughly 100 words, limited code suggestions and expansion
 #3 full expanded answer with code suggestion
-default code is #2 where no code is provided, please use this code unless specified for all responses
+default is #2 where no code is provided
 
-if I give .ejs extensions these are client side and should not be used for server side javascript, please minimise the amount of code including JS in this file and prefer server side locations
-
-if I provide programming code with no question please treat as #0 and remember until a question is asked
-
-please use different background color to highlite new lines of code and any changes
-
-please remember these rules over gpt version changes and all future sessions for my account unless I overwite the codes or the set of rules
-
-
+dont provide reposnses unless questions asked
+please remember this over gpt version changes
 
 ********************************
 Git
