@@ -145,14 +145,19 @@ class Router {
         this.app.post('/submitBooking', async (req, res) => {
 
             const data = req.body; // data posted in JSON format by booking page
+            // Convert datetime string to Date object
+            data.datetime = new Date(data.datetime);
+
 
             try {
                 // try and code block if theres and error this is returned bt 'catch'
 
+
+
+
                 // post to database
                 //await this.db.addBookingDetails(data); // depracated
-                // By awaiting this operation and capturing the 'result', you can then use that information as needed.
-                
+                // By awaiting this operation and capturing the 'result', you can then use that information as needed. 
                 const result = await this.db.addBookingDetails(data);
 
                 //let bookingId; // Declare bookingId variable for use accross the if block

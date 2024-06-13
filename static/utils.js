@@ -1,4 +1,6 @@
-function filterBookings(filter){
+///// BOOKINGS.EJS /////
+
+function filterBookings(filter) {
 
 
     // Redirect to the /api/filterBookings endpoint
@@ -55,8 +57,90 @@ function displayBooking(booking) {
             <p><strong>ID:</strong> ${booking._id}</p>
             <p><strong>Name:</strong> ${booking.name}</p>
             <p><strong>Date:</strong> ${booking.date}</p>
+            <p><strong>Date:</strong> ${booking.time}</p>
             <p><strong>Vehicle:</strong> ${booking.car}</p>
         </div>
     `;
     document.getElementById('bookingsContainer').innerHTML += bookingHTML; // **Updated to add to existing HTML**
+}
+
+// BOOKING.EJS ....
+
+function submitBooking() {
+
+    const name = document.getElementById('nameIpt').value;
+    const number = document.getElementById('phoneIpt').value;
+    const car = document.getElementById('carIpt').value;
+    const date = document.getElementById('dateIpt').value;
+    const time = document.getElementById('timeIpt').value;
+    const size = document.getElementById('sizeIpt').value;
+
+    const datetime = new Date(`${date}T${time}`); // line joining date and time into a mongo dateTime object
+
+    const data = {
+        name: name,
+        number: number,
+        car: car,
+        datetime: datetime,
+        size: size
+    };
+
+
+
+    console.log(data);
+
+    // Check that data is not null
+
+    if (!name) {
+        showUser("Please enter a name");
+        return;
+    } else if (!number) {
+        showUser("Please enter a number");
+        return;
+    } else if (!car) {
+        showUser("Please enter a Car make & Model");
+        return;
+    } else if (!date) {
+        showUser("Please enter a date");
+        return;
+    } else if (!time) {
+        showUser("Please enter a time");
+        return;
+    } else if (!size) {
+        showUser("Please select a size");
+        return;
+    }
+
+    // JS needs to handle the redirect specifically in the case of header redirect combined with fetch method
+    fetch('/submitBooking', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    }).then(response => response.json()) //The then() method is used to handle the response from the server. It takes a callback function as an argument, which will be executed when the response is received.
+        .then(result => { //The second then() callback function receives the parsed JSON data as result. It then checks if result.success is true or false.
+            if (result.success) {
+                alert("Booking added successfully!");
+                window.location.href = `/bookings?newBookingId=${result._id}`;
+            } else {
+                alert("Failed to add booking.");
+            }
+        }).catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred. Please try again.");
+        });
+
+
+
+}
+
+function showUser(message, error = true) {
+    const textElem = document.getElementById('showUser');
+
+    if (!error)
+        textElem.style.color = "green";
+
+    textElem.innerHTML = "";
+    textElem.textContent = message;
 }

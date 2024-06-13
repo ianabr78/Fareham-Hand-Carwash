@@ -39,7 +39,7 @@ I will use these codes, how you should answer is after the comma:
 #0, remember this for later, the filename will be at the top, confirm you have remembered it only. Please refer to code by the page names provided.
 #1, yes or no answer
 #2, roughly 100 words, limited code suggestions and expansion
-#3, provide only the explanation of the errors in the code provided and your corrections
+#3, provide only the explanation of the errors in the code provided and your corrections without additional commentary
 #4, full expanded answer with code suggestion
 
 Default code is #2 where no code is provided, please use this code unless specified for all responses
@@ -102,13 +102,27 @@ p: zjEqxsEInK6ER200
 followed instructions on "Add MongoDB Binaries Directory to PATH" after VS connection error
 (this prob not needed as was not the issue)
 
+// to enable whole db manipulation eg remove multiple records from a table 
+// this part didnt complete
 
+to access command line tools select Indexes tab in the Atlas interface for the collection
+- In the top right corner, click on the "Command Line Tools" button.
+- Select "Open in MongoDB Shell" to open the MongoDB shell interface.
+
+https://www.mongodb.com/docs/mongodb-shell/install/  - need shell
+https://www.mongodb.com/docs/v2.2/tutorial/getting-started-with-the-mongo-shell/
+https://www.mongodb.com/docs/manual/tutorial/remove-documents/ - and other instruction sets
+(gave up on above no clue where it isntalled)
 
 
 
 ********************************
 
+Choclatey
+https://docs.chocolatey.org/en-us/choco/setup/#installing-chocolatey
 
+from command line:
+https://docs.chocolatey.org/en-us/choco/setup/#installing-chocolatey
 
 
 

@@ -23,10 +23,48 @@ class Database {
     }
 
     async fetchBookingDetails() {
+        // fetches all bookings for /bookings route
+
         try {
             // 'bookings' is the actual collection name
             const collection = this.db.collection('bookings');
-            return await collection.find({}).toArray(); // Modify to match specific criteria if necessary
+           
+            //The collection object represents a MongoDB collection, and it provides methods for performing basic CRUD (Create, Read, Update, Delete) operations on documents in that collection. However, if you need to perform more complex data transformations or aggregations, such as reshaping documents, grouping, sorting, or computing new fields based on existing ones, you'll need to use the aggregation framework, which is done through the aggregate() method. 
+            // This allows you to create a pipeline of stages to process your data in MongoDB
+
+            const bookingDetails = await collection.aggregate([
+                {
+                    $project: {
+                        //  $project is an aggregation pipeline stage used to reshape documents. It allows you to specify which fields to include or exclude from the output documents, rename fields,
+                        //
+                        // The fetchBookingDetails function now exclusively uses the aggregation framework to reshape the document and retrieve the required fields, including the date and time.
+
+                        // need to build the object here, any fields needed should be listed below:
+
+                        _id: true,
+                        name: true,
+                        number: true,
+                        car: true,
+                        size: true,
+                        datetime: true, // Keep datetime for filtering
+                        date: { $dateToString: { format: "%Y-%m-%d", date: "$datetime" } }, //datetime is the field name
+                        time: { $dateToString: { format: "%H:%M", date: "$datetime" } }
+                    }
+                }
+            ]).toArray();
+
+            // just for checking booking dates and times have been correctly stored
+            console.log("Booking Details:");
+            bookingDetails.forEach(booking => {
+                console.log('Date:', booking.date);
+                console.log('Time:', booking.time);
+            });
+
+            // the line below was used before the bookingDetails = await collection.aggregate was added
+            //return await collection.find({}).toArray(); // Modify to match specific criteria if necessary
+            return bookingDetails; // Return the modified booking details
+
+
         } catch (err) {
             console.error('Error fetching booking details:', err);
             throw err;
@@ -54,14 +92,16 @@ class Database {
 
         // the dated need conversion for use in mongoDB:
        // startDate = startDate.toISOString();
-       // endDate = endDate.toISOString();
+        // endDate = endDate.toISOString();
+        //You need to pass a date object and not a date string.
+       // collection.findOne({ last_updated: new Date('2014-01-22T14:56:59.301Z') }, function (err, doc) {
 
 
         console.log('start: ' + startDate + ' end:' + endDate);
 
          // Log the query before executing
         console.log('Filter by date query:', {
-            date: {
+            datetime: {
                 $gte: startDate,
                 $lte: endDate
             }
@@ -69,7 +109,7 @@ class Database {
 
         // execute
         return await collection.find({
-            date: {
+            date: { /// need to woerk with datetime
                 $gte: startDate,
                 $lte: endDate
             }
