@@ -1,9 +1,8 @@
-const { MongoClient } = require('mongodb');
 const express = require('express');
 const favicon = require('serve-favicon');
 const path = require('path');
-const Database = require('./db');  // make sure these match the class names used
-const Router = require('./router');
+const Database = require('./db'); // Adjust path as necessary
+const Router = require('./router'); // Assuming you have a router defined
 
 class Server {
     constructor() {
@@ -17,24 +16,24 @@ class Server {
         this.app.use(express.json());
         this.app.set('view engine', 'ejs');
 
-        this.db = new Database();
+        this.db = new Database(); // Initialize the Database instance
         this.init();
     }
 
     async init() {
         try {
-            await this.db.connect();
+            // No need to call this.db.connect() here
             console.log('Connected to MongoDB...');
 
-            this.router = new Router(this.app, this.db); // Pass the db instance from the Database class
-            this.router.route();
+            const router = new Router(this.app, this.db); // Pass the db instance to the Router
+            router.route();
 
             this.app.listen(this.port, () => {
-                console.log(`Connected to: ${this.hostName}:${this.port}`);
+                console.log(`Server listening on ${this.hostName}:${this.port}`);
             });
         } catch (err) {
-            console.error('Error connecting to MongoDB:', err);
-            throw err;
+            console.error('Error initializing server:', err);
+            process.exit(1); // Exit with error code 1
         }
     }
 }

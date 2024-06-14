@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "mongo": "^0.1.0",
-    "mongoose": "^8.4.0",
+    "mongoose": "^8.4.1",
     "serve-favicon": "^2.5.0"
   },
   "repository": {
