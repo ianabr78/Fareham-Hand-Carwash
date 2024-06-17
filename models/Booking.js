@@ -6,16 +6,17 @@ const bookingSchema = new mongoose.Schema({
     number: String,
     car: String,
     size: String,
-    datetime: Date
+    datetime: Date,
 }, { collection: 'bookings' }); // Specify the collection name here
 
 
 // a static method for aggregation of the fields needed by a booking
 // this static metho can then be used by other methods
 
-bookingSchema.statics.aggregateBookingDetails = async function () {
+bookingSchema.statics.aggregateBookingDetails = async function (filterCriteria) {
     try {
         const bookingDetails = await this.aggregate([
+            { $match: filterCriteria }, // Add the match stage with your criteria
             {
                 $project: {
                     _id: true,

@@ -69,13 +69,23 @@ class Database {
 
             console.log('filteringByDates: ' + startDate + ' to ' + endDate);
 
-            // Aggregate booking details within the date range
-            const bookingDetails = await Booking.aggregateBookingDetails();
+            const filterCriteria = {
+                datetime: { $gte: startDate, $lte: endDate }
+            };
 
+            // Aggregate booking details within the date range
+            const bookingDetails = await Booking.aggregateBookingDetails(filterCriteria);
+
+
+            /*
+            this was working but not returning the dates
             const filteredBookings = await Booking.find()
                 .where('datetime').gte(startDate).lte(endDate)
                 .exec();
+                
+            */
 
+            // just a check of how many records returned
             const count = filteredBookings.length;
             console.log('filterByDate bookings found:', count);
 
@@ -83,7 +93,10 @@ class Database {
             //const bookingDetails = await Booking.aggregateBookingDetails();
 
 
-            return filteredBookings;
+            //return filteredBookings;
+
+            return bookingDetails;
+
         } catch (err) {
             console.error('Error filtering bookings by date:', err);
             throw err;

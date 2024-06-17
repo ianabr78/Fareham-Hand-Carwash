@@ -63,6 +63,7 @@ class Router {
 
             try {
                 const bookingsData = await this.db.filterByDate(startDate, endDate);
+                console.log('booking data: ' + bookingsData);
                 res.render('pages/bookings', { bookings: bookingsData, newBookingId: 'defaultBookingId' });
             } catch (error) {
                 console.error('Failed to filter bookings:', error);
