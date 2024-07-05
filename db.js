@@ -20,37 +20,7 @@ class Database {
 
     //
 
-    async fetchBookingDetails() {
-        try {
-
-            // aggregate only used to set defaults and manuipulate the date fields the line below would be more simple
-            //const bookingDetails = await Booking.find({}).exec();
-
-            const count = await Booking.countDocuments().exec();
-            console.log("Bookings Count:", count);
-
-            const bookingDetails = await Booking.aggregateBookingDetails();
-           
-
-            //console.log("Booking Details:", bookingDetails); // Log fetched details
-            //const bookingCount = await Booking.countDocuments().exec();
-            //console.log('Number of bookings:', bookingCount); // log a count of the object for debug
-
-            /*
-            bookingDetails.forEach(booking => {
-                console.log('Date:', booking.date);
-                console.log('Time:', booking.time);
-            });
-            */
-
-            return bookingDetails;
-        } catch (err) {
-            console.error('Error fetching booking details:', err);
-            throw err;
-        }
-    }
-
-
+   
     async addBookingDetails(data) {
         try {
             const newBooking = new Booking(data);
@@ -69,28 +39,32 @@ class Database {
 
             console.log('filteringByDates: ' + startDate + ' to ' + endDate);
 
+            
             const filterCriteria = {
                 datetime: { $gte: startDate, $lte: endDate }
             };
+
+
+            console.log('filtered criteria passed by filterByDate: ' + filterCriteria);
 
             // Aggregate booking details within the date range
             const bookingDetails = await Booking.aggregateBookingDetails(filterCriteria);
 
 
-            /*
-            this was working but not returning the dates
-            const filteredBookings = await Booking.find()
+            
+            // this was working but not returning the dates
+            /* const filteredBookings = await Booking.find()
                 .where('datetime').gte(startDate).lte(endDate)
                 .exec();
-                
-            */
+            */    
+            
 
             // just a check of how many records returned
-            const count = filteredBookings.length;
-            console.log('filterByDate bookings found:', count);
+            //const count = filteredBookings.length;
+            //console.log('filterByDate bookings found:', count);
 
             // need to use this somewhere
-            //const bookingDetails = await Booking.aggregateBookingDetails();
+
 
 
             //return filteredBookings;
@@ -103,21 +77,26 @@ class Database {
         }
     }
 
-    async customQuery(criteria) {
+    async filterByBookingID(findCriteria) {
+
         try {
-            if (criteria._id) {
-                criteria._id = mongoose.Types.ObjectId(criteria._id);
-            }
+            console.log('filtering by BookingID:', findCriteria);
 
-            console.log('Criteria object:', criteria);
+            //const filterCriteria = { _id: mongoose.Types.ObjectId(id) };
+            // this not needed as set up as id object in the router
 
-            const bookingDetails = await Booking.find(criteria).exec();
+            const bookingDetails = await Booking.aggregateBookingDetails(findCriteria);
+
             return bookingDetails;
         } catch (err) {
-            console.error('Error executing custom query:', err);
+            console.error('Error filtering booking by ID:', err);
             throw err;
         }
     }
+
+
+
+    
 
     async close() {
         await mongoose.disconnect();

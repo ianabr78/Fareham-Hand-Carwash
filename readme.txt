@@ -1,7 +1,10 @@
+666c4cb38251cc5c0d22147c
+
 Setup
 
 cd "C:\xampp\htdocs\fareham_carwash"
 
+cd "C:\Users\Fareham College\source\repos\Fareham-Hand-Carwash1"
 (clone repository)
 
 
@@ -36,7 +39,7 @@ please remember the following set of rules:
 
 
 I will use these codes, how you should answer is after the comma:
-#0 or ?0, remember this for later, the filename will be at the top, confirm you have remembered it only. Please refer to code by the page names provided.
+#0 or ?0, remember this for later, the filename will be at the top, confirm you have remembered it and do not reply. Please refer to code by the page names provided.
 #1 or ?1, yes or no answer
 #2 or ?2, roughly 100 words, limited code suggestions and expansion
 #3 or ?3, provide only the explanation of the errors in the code provided and your corrections without additional commentary
@@ -56,6 +59,9 @@ please default to code 0 where no question is asked, do not reply and remember t
 
 please remember these rules over gpt version changes and all future sessions for my account unless I overwite the codes or the set of rules
 
+Whenever providing code changes, mark the new or changed lines with comment "//changed" to make them easily identifiable.
+
+Please do not provide all code just parts which have changes, but include line numbers corresponding to which line this is in the original file
 
 
 ********************************
@@ -99,7 +105,7 @@ mongodb+srv://<username>:<password>@fareham-hand-carwash.7wrs3jo.mongodb.net/
 
 replace username and password yourself!!!
 mongodb+srv://fhamcwash2:zjEqxsEInK6ER200@fareham-hand-carwash.7wrs3jo.mongodb.net/
-
+mongodb+srv://fhamcwash2:zjEqxsEInK6ER200@fareham-hand-carwash.7wrs3jo.mongodb.net/fhcw
 
 u: fhamcwash2
 p: zjEqxsEInK6ER200

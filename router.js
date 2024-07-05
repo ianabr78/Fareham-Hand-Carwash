@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const ObjectId = require('mongodb').ObjectId;
 const Mailer = require('./mailer');
 
 class Router {
@@ -20,15 +21,48 @@ class Router {
         });
 
         this.app.get('/booking', (req, res) => {
-            res.render('pages/booking');
+
+            // allowing polulated OR blank
+              const bookingData = {
+                    id: req.query.id || '',
+                    name: req.query.name || '',
+                    date: req.query.date || '',
+                    time: req.query.time || '',
+                    car: req.query.car || ''
+                };
+                res.render('pages/booking', { bookingData });
+            
         });
+
+
+        app.post('/updateBooking', async (req, res) => {
+            try {
+                const { id, name, date, time, car } = req.body;
+                await Booking.updateOne({ _id: mongoose.Types.ObjectId(id) }, { name, date, time, car });
+                res.json({ success: true });
+            } catch (error) {
+                console.error('Error updating booking:', error);
+                res.json({ success: false });
+            }
+        });
+
+
 
         this.app.get('/bookings', async (req, res) => {
             try {
-                
-                const bookingsData = await this.db.fetchBookingDetails();
+                const filterCriteria = {}; 
+                console.log('Bookings route');
+                console.log('filtered criteria passed by bookings route: ' + filterCriteria);
+
+                const startDate = new Date();
+                const endDate = new Date(startDate);
+                startDate.setDate(startDate.getDate() - 999);
+                endDate.setDate(endDate.getDate() + 999);
+
+
+                const bookingsData = await this.db.filterByDate(startDate, endDate);
                 const newBookingId = req.query.newBookingId || 'defaultBookingId';
-                console.trace('Inside GET /bookings'); // Log trace message
+                console.trace('Inside GET bookings'); // Log trace message
                 res.render('pages/bookings', { bookings: bookingsData, newBookingId: newBookingId });
             } catch (error) {
                 console.error('Failed to fetch booking details:', error);
@@ -36,15 +70,35 @@ class Router {
             }
         });
 
-        this.app.get('/api/customquery', async (req, res) => {
+
+        //for finding specific ID
+        this.app.get('/api/findByID', async (req, res) => {
             try {
+
+                
                 const id = req.query.id;
-                const results = await this.db.customQuery({ "_id": id });
+                console.log('/api/findByID id is: ' + id);
+
+                const filterID = { _id: new ObjectId(id) };
+                const results = await this.db.filterByBookingID(filterID);
+             
+                /////// filterByBookingID() 
+
                 res.json(results);
+
+                //res.render('pages/booking', { bookings: bookingsData, newBookingId: 'defaultBookingId' });
+                //res.render('pages/booking');
+                // res . renter not needed as utils.js is expecting a JSON reponse
+
+
             } catch (error) {
-                res.status(500).json({ error: 'Failed to execute custom query' });
+                res.status(500).json({ error: 'Failed to execute findByID' });
+                console.error('Error in findByID route:', error);
             }
         });
+
+
+
 
         this.app.get('/api/filterBookings', async (req, res) => {
             const filter = req.query.filter;
@@ -63,7 +117,7 @@ class Router {
 
             try {
                 const bookingsData = await this.db.filterByDate(startDate, endDate);
-                console.log('booking data: ' + bookingsData);
+                console.log('booking data returned ');
                 res.render('pages/bookings', { bookings: bookingsData, newBookingId: 'defaultBookingId' });
             } catch (error) {
                 console.error('Failed to filter bookings:', error);

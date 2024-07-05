@@ -24,15 +24,15 @@
             <div class="content">
                 <div class="booking">
 
-
+                 <input type="hidden" id="idIpt" value="<%= bookingData ? bookingData._id : '' %>">
 
                     <div class="entry">
                         <p>Name</p>
-                        <input type="text" placeholder="John Smith" id="nameIpt">
+                        <input type="text" placeholder="John Smith" id="nameIpt" value="<%= bookingData.name %>">
                     </div>
                     <div class="entry">
                         <p>Phone Number</p>
-                        <input type="number" placeholder="01234567890" id="phoneIpt">
+                        <input type="number" placeholder="01234567890" id="phoneIpt"> 
                     </div>
                     <div class="break"></div>
                     <div class="entry">
@@ -41,7 +41,7 @@
                     </div>
                     <div class="entry">
                         <p>Date & Time of Visit</p>
-                        <input type="date" id="dateIpt">
+                        <input type="date" id="dateIpt" >
                         <input type="time" step="900" value="12:00" id="timeIpt">
                     </div>
                     <div class="break"></div>
@@ -54,7 +54,7 @@
                         </select>
                     </div>
                     <div class="break"></div>
-                    <button onclick="submitBooking()" id="bookbutton">Book Now!</button>
+                    <button onclick="submitForm()" id="bookbutton">Book Now!</button>
                     <div class="break"></div>
                     <p style="color: red;" id="showUser"></p>
                 </div>
@@ -76,6 +76,17 @@
             </div>
         </div>
     </div>
+
+     <script>
+        function submitForm() {
+            if (document.getElementById('idIpt').value) {
+                submitEditedBooking();
+            } else {
+                submitBooking();
+            }
+        }
+    </script>
+
     </body>
 
 

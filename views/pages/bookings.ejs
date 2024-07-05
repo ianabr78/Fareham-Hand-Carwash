@@ -70,9 +70,9 @@
                 <div class="booking <%= bookingClass %>"
                     id="<%= booking._id %>">
                     <div class="bookings">
-                        <p><strong>ID:</strong>
+                        <a href="#" onclick="editBooking('<%= booking._id %>')"><p><strong>ID:</strong>
                             <%= booking._id %>
-                        </p>
+                        </p></a>
                         <p><strong>Name:</strong>
                             <%= booking.name %>
                         </p>
@@ -89,7 +89,7 @@
                 </div>
                 <% }); %>
                 <% } else { %>
-                <p>No bookings found.</p>
+                <p><div class="bookings error">No bookings found.</div></p>
                 <% } %>
             </div>
         </div>
