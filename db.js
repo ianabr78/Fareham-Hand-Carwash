@@ -1,65 +1,126 @@
-const { MongoClient } = require("mongodb");
+const mongoose = require('mongoose');
+//const Booking = mongoose.model('./models/Booking', bookingSchema, 'bookings'); //specify to mongoos which collection (didnt need this in node/j)
+const Booking = require('./models/Booking');
 
 class Database {
     constructor() {
-        this.uri = "mongodb+srv://fhamcwash2:zjEqxsEInK6ER200@fareham-hand-carwash.7wrs3jo.mongodb.net/?retryWrites=true&w=majority&appName=Fareham-Hand-Carwash";
-        this.client = new MongoClient(this.uri, {
-            tlsAllowInvalidCertificates: true // For testing purposes only
+        mongoose.connect('mongodb+srv://fhamcwash2:zjEqxsEInK6ER200@fareham-hand-carwash.7wrs3jo.mongodb.net/fhcw', {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
         });
-        
-        this.db = null;
-    }
 
-    async connect() {
-        try {
-            await this.client.connect();
-            this.db = this.client.db('fhcw'); //fhcw is the datsabase name, not the username (as defined in .env)
+        this.db = mongoose.connection;
+        this.db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+        this.db.once('open', () => {
             console.log('Connected to MongoDB...');
-        } catch (err) {
-            console.error('Error connecting to MongoDB:', err);
-            throw err;
-        }
+        });
     }
 
-    async fetchBookingDetails() {
-        try {
-            // 'bookings' is the actual collection name
-            const collection = this.db.collection('bookings');
-            return await collection.find({}).toArray(); // Modify to match specific criteria if necessary
-        } catch (err) {
-            console.error('Error fetching booking details:', err);
-            throw err;
-        }
-    }
+    
 
+    //
+
+   
     async addBookingDetails(data) {
         try {
-            const collection = this.db.collection('bookings');
-            const result = await collection.insertOne(data);
-            // if we dont use await collection.insertOne(data) then whole object can be returned
-            return result; // Return the result of insertOne
-           
+            const newBooking = new Booking(data);
+            const result = await newBooking.save();
+            console.log('result of addingBookingDetails:', result);
+            return result;
         } catch (err) {
             console.error('Error inserting booking details:', err);
             throw err;
         }
     }
 
-    async customQuery(criteria) {
+    async updateBooking(id, newData) {
         try {
-            const collection = this.db.collection('bookings');
-            return await collection.find(criteria).toArray();
+            const updatedBooking = await Booking.findOneAndUpdate(
+                { _id: id },
+                newData,
+                { new: true } // To return the updated document
+            );
+    
+            if (!updatedBooking) {
+                throw new Error(`Booking with ID ${id} not found.`);
+            }
+    
+            console.log('Updated booking:', updatedBooking);
+            return updatedBooking;
         } catch (err) {
-            console.error('Error executing custom query:', err);
+            console.error('Error updating booking:', err);
             throw err;
         }
     }
 
-    async close() {
-        await this.client.close();
+    async filterByDate(startDate, endDate) {
+        try {
+
+
+            console.log('db.js filteringByDates: ' + startDate + ' to ' + endDate);
+
+            
+            const filterCriteria = {
+                datetime: { $gte: startDate, $lte: endDate }
+            };
+
+
+
+            // Aggregate booking details within the date range
+            const bookingDetails = await Booking.aggregateBookingDetails(filterCriteria);
+
+
+            
+            // this was working but not returning the dates
+            /* const filteredBookings = await Booking.find()
+                .where('datetime').gte(startDate).lte(endDate)
+                .exec();
+            */    
+            
+
+            // just a check of how many records returned
+            //const count = filteredBookings.length;
+            //console.log('filterByDate bookings found:', count);
+
+            // need to use this somewhere
+
+
+
+            //return filteredBookings;
+
+            return bookingDetails;
+
+        } catch (err) {
+            console.error('Error filtering bookings by date:', err);
+            throw err;
+        }
     }
 
+    async filterByBookingID(findCriteria) {
+
+        try {
+            console.log('db.js filtering by BookingID:', findCriteria);
+
+            //const filterCriteria = { _id: mongoose.Types.ObjectId(id) };
+            // this not needed as set up as id object in the router
+
+            const bookingDetails = await Booking.aggregateBookingDetails(findCriteria);
+
+            return bookingDetails;
+        } catch (err) {
+            console.error('Error filtering booking by ID:', err);
+            throw err;
+        }
+    }
+
+
+
     
+
+    async close() {
+        await mongoose.disconnect();
+        console.log('Disconnected from MongoDB.');
+    }
 }
 
 module.exports = Database;

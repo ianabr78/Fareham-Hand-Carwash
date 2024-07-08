@@ -6,6 +6,9 @@
         <link rel="stylesheet" href="/static/parallax.css">
         <link rel="stylesheet" href="/static/booking.css">
         <link rel="stylesheet" href="/static/booking.css">
+
+        <script src="/static/utils.js"></script>
+
 </head>
 
 <body>
@@ -22,24 +25,32 @@
                 <div class="booking">
 
 
+             
+
+                    <!-- Debug statement to ensure booking data is passed correctly -->
+                    <!-- can use colsol log here and will report in terminal -->
+                    <!-- <% console.log('Booking data:', booking); %> -->
+
+                
+                 <input type="hidden" id="idIpt" value="<%= booking.id ? booking.id : '' %>">
 
                     <div class="entry">
                         <p>Name</p>
-                        <input type="text" placeholder="John Smith" id="nameIpt">
+                        <input type="text" placeholder="John Smith" id="nameIpt" value="<%= booking.name ? booking.name : 'Unknown' %>">
                     </div>
                     <div class="entry">
                         <p>Phone Number</p>
-                        <input type="number" placeholder="01234567890" id="phoneIpt">
+                        <input type="number" placeholder="01234567890" id="phoneIpt" value="<%= booking.number ? booking.number : '' %>"> 
                     </div>
                     <div class="break"></div>
                     <div class="entry">
                         <p>Vehicle Make & Model</p>
-                        <input type="text" placeholder="Ford Fiesta" id="carIpt">
+                        <input type="text" placeholder="Ford Fiesta" id="carIpt" value="<%= booking.car ? booking.car : '' %>">
                     </div>
                     <div class="entry">
                         <p>Date & Time of Visit</p>
-                        <input type="date" id="dateIpt">
-                        <input type="time" step="900" value="12:00" id="timeIpt">
+                        <input type="date" id="dateIpt" value="<%= booking.date ? booking.date : '' %>">
+                        <input type="time" step="900" value="<%= booking.time ? booking.time : '12:00' %>" id="timeIpt">
                     </div>
                     <div class="break"></div>
                     <div class="entry">
@@ -51,7 +62,15 @@
                         </select>
                     </div>
                     <div class="break"></div>
-                    <button onclick="submitBooking()" id="bookbutton">Book Now!</button>
+
+                   
+                    <% if (booking && booking.id !== '') { %> <!--check booking exist-->
+                        <button onclick="updateBooking()" id="editButton">Edit Booking</button>
+                    <% } else { %> <!--changed-->
+                        <button onclick="submitBooking()" id="bookButton">Book Now!</button>
+                    <% } %>
+
+                    
                     <div class="break"></div>
                     <p style="color: red;" id="showUser"></p>
                 </div>
@@ -73,80 +92,21 @@
             </div>
         </div>
     </div>
+
+     <script>
+        function submitForm() {
+            if (document.getElementById('idIpt').value) {
+                submitEditedBooking();
+            } else {
+                submitBooking();
+            }
+        }
+
+
+        
+    </script>
+
     </body>
 
-    <script>
-        function submitBooking() {
-            const data = {
-                name: document.getElementById('nameIpt').value,
-                number: document.getElementById('phoneIpt').value,
-                car: document.getElementById('carIpt').value,
-                date: document.getElementById('dateIpt').value,
-                time: document.getElementById('timeIpt').value,
-                size: document.getElementById('sizeIpt').value
-            }
-
-            console.log(data);
-
-            // Check that data is not null
-            if (data.name == '') {
-                showUser("Please enter a name");
-                return
-            }
-            else if (data.number == '') {
-                showUser("Please enter a number");
-                return
-            }
-            else if (data.car == '') {
-                showUser("Please enter a Car make & Model");
-                return
-            }
-            else if (data.date == '') {
-                showUser("Please enter a date");
-                return
-            }
-            else if (data.time == '') {
-                showUser("Please enter a time");
-                return
-            }
-            else if (data.size == '') {
-                showUser("Please select a size");
-                return
-            }
-
-            // JS needs to handle the redirect specifically in the case of header redirect combined with fetch method
-            fetch('/submitBooking', {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            }).then(response => response.json()) //The then() method is used to handle the response from the server. It takes a callback function as an argument, which will be executed when the response is received.
-                .then(result => { //The second then() callback function receives the parsed JSON data as result. It then checks if result.success is true or false.
-                    if (result.success) {
-                        alert("Booking added successfully!");
-                        window.location.href = `/bookings?newBookingId=${result._id}`;
-                    } else {
-                        alert("Failed to add booking.");
-                    }
-                }).catch(error => {
-                    console.error("Error:", error);
-                    alert("An error occurred. Please try again.");
-                });
-
-
-
-        }
-
-        function showUser(message, error = true) {
-            const textElem = document.getElementById('showUser');
-
-            if (!error)
-                textElem.style.color = "green";
-
-            textElem.innerHTML = "";
-            textElem.textContent = message;
-        }
-    </script>
 
     </html>
